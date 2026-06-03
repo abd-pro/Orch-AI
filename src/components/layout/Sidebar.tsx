@@ -233,6 +233,13 @@ export default function Sidebar({ user, conversations = [], isAdmin = false, onC
             </Link>
           </div>
         )}
+
+        {/* Liens légaux */}
+        <div className="flex justify-center gap-3 pt-1 pb-0.5">
+          <Link href="/privacy" className="text-[9px] text-[var(--mu3)] hover:text-[var(--mu2)] transition-colors">Confidentialité</Link>
+          <span className="text-[var(--mu3)] text-[9px]">·</span>
+          <Link href="/terms" className="text-[9px] text-[var(--mu3)] hover:text-[var(--mu2)] transition-colors">CGU</Link>
+        </div>
       </div>
     </aside>
   )

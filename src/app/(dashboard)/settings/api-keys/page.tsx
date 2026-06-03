@@ -5,11 +5,14 @@ import { Check, Eye, EyeOff, Trash2, ExternalLink } from 'lucide-react'
 import { AI_MODELS, type AIProvider } from '@/lib/types'
 
 const PROVIDER_LINKS: Record<AIProvider, { label: string; url: string }> = {
-  openai: { label: 'platform.openai.com/api-keys', url: 'https://platform.openai.com/api-keys' },
-  anthropic: { label: 'console.anthropic.com', url: 'https://console.anthropic.com' },
-  gemini: { label: 'aistudio.google.com', url: 'https://aistudio.google.com' },
-  mistral: { label: 'console.mistral.ai', url: 'https://console.mistral.ai' },
-  perplexity: { label: 'perplexity.ai/settings/api', url: 'https://www.perplexity.ai/settings/api' },
+  openai:     { label: 'platform.openai.com/api-keys',     url: 'https://platform.openai.com/api-keys' },
+  anthropic:  { label: 'console.anthropic.com',            url: 'https://console.anthropic.com' },
+  gemini:     { label: 'aistudio.google.com',              url: 'https://aistudio.google.com' },
+  mistral:    { label: 'console.mistral.ai',               url: 'https://console.mistral.ai' },
+  perplexity: { label: 'perplexity.ai/settings/api',       url: 'https://www.perplexity.ai/settings/api' },
+  grok:       { label: 'console.x.ai',                     url: 'https://console.x.ai' },
+  deepseek:   { label: 'platform.deepseek.com/api_keys',   url: 'https://platform.deepseek.com/api_keys' },
+  groq:       { label: 'console.groq.com/keys',            url: 'https://console.groq.com/keys' },
 }
 
 export default function APIKeysPage() {

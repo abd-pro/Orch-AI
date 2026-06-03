@@ -119,8 +119,8 @@ async function generateChatGPTImage(prompt: string, aspectRatio: string) {
       model: 'gpt-image-1', prompt, n: 1,
       size: sizeMap[aspectRatio] ?? '1024x1024',
     })
-    const item = res.data[0]
-    const url = item.url ?? (item.b64_json ? `data:image/png;base64,${item.b64_json}` : undefined)
+    const item = res.data?.[0]
+    const url = item?.url ?? (item?.b64_json ? `data:image/png;base64,${item.b64_json}` : undefined)
     return { url, error: url ? undefined : 'Pas d\'image', durationMs: Date.now() - start }
   } catch (e: unknown) {
     return { error: (e as Error).message, durationMs: Date.now() - start }

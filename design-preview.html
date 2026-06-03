@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Preview — Meta AI</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #000; font-family: -apple-system, 'Inter', sans-serif; color: #fff; padding: 32px 24px; }
+h1 { text-align: center; font-size: 14px; color: #555; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 32px; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1200px; margin: 0 auto; }
+
+.card { border-radius: 16px; overflow: hidden; position: relative; }
+.label { position: absolute; top: 14px; left: 14px; z-index: 10; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; }
+
+/* ── Mockup shell ── */
+.shell { display: flex; height: 440px; }
+.sidebar { width: 200px; height: 100%; display: flex; flex-direction: column; padding: 16px 12px; shrink: 0; flex-shrink: 0; }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 16px; }
+.logo-icon { width: 30px; height: 30px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.logo-text { font-size: 13px; font-weight: 600; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 10px; font-size: 12px; margin-bottom: 2px; cursor: pointer; }
+.nav-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+.nav-divider { height: 1px; margin: 8px 0; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.messages { flex: 1; padding: 20px 16px; display: flex; flex-direction: column; gap: 14px; overflow: hidden; }
+.msg-user { align-self: flex-end; max-width: 70%; padding: 10px 14px; border-radius: 16px 16px 4px 16px; font-size: 12px; line-height: 1.5; }
+.msg-ai-wrap { display: flex; flex-direction: column; gap: 6px; max-width: 85%; }
+.ai-badges { display: flex; gap: 5px; }
+.ai-badge { font-size: 9px; padding: 2px 7px; border-radius: 99px; border: 1px solid; }
+.msg-ai { padding: 12px 14px; border-radius: 4px 16px 16px 16px; font-size: 12px; line-height: 1.6; }
+.input-zone { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.ai-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.chip { font-size: 10px; padding: 3px 10px; border-radius: 99px; border: 1px solid; }
+.chip.active { font-weight: 600; }
+.input-row { display: flex; gap: 8px; align-items: center; }
+.input-field { flex: 1; padding: 9px 14px; border-radius: 12px; font-size: 12px; border: 1px solid; outline: none; }
+.send-btn { width: 36px; height: 36px; border-radius: 10px; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.send-icon { width: 14px; height: 14px; background: #fff; clip-path: polygon(0 100%, 100% 50%, 0 0, 25% 50%); }
+.toolbar-btns { display: flex; gap: 5px; }
+.tbtn { width: 28px; height: 28px; border-radius: 8px; border: 1px solid; display: flex; align-items: center; justify-content: center; }
+.tbtn-icon { width: 12px; height: 12px; border-radius: 2px; }
+
+
+/* ══════════════════════════════════════════
+   OPTION A — OBSIDIAN
+══════════════════════════════════════════ */
+.a .label { background: #7c3aed22; color: #a78bfa; border: 1px solid #7c3aed44; }
+.a .shell { background: #0a0a12; }
+.a .sidebar { background: #06060e; border-right: 1px solid #ffffff08; }
+.a .sidebar-logo { border-bottom-color: #ffffff08; }
+.a .logo-icon { background: linear-gradient(135deg, #6366f1, #8b5cf6); box-shadow: 0 0 16px #6366f140; color: #fff; }
+.a .logo-text { color: #e2e2f0; }
+.a .nav-item.active { background: #6366f115; color: #c4b5fd; }
+.a .nav-item.active .nav-dot { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.a .nav-item { color: #4a4a6a; }
+.a .nav-item .nav-dot { background: #2a2a3a; }
+.a .nav-divider { background: #ffffff06; }
+.a .main { background: #0a0a12; }
+.a .messages { background: #0a0a12; }
+.a .msg-user { background: linear-gradient(135deg, #6366f125, #8b5cf615); border: 1px solid #6366f130; color: #d4d4f0; }
+.a .msg-ai { background: #12121e; border: 1px solid #ffffff08; color: #c8c8d8; }
+.a .ai-badge { background: transparent; color: #888; border-color: #ffffff12; }
+.a .input-zone { background: #06060e; border-top: 1px solid #ffffff06; }
+.a .chip { background: transparent; color: #4a4a6a; border-color: #ffffff10; }
+.a .chip.active { background: #6366f115; color: #a78bfa; border-color: #6366f140; }
+.a .input-field { background: #0d0d1a; border-color: #ffffff10; color: #d4d4f0; }
+.a .input-field::placeholder { color: #2a2a4a; }
+.a .send-btn { background: linear-gradient(135deg, #6366f1, #8b5cf6); box-shadow: 0 4px 14px #6366f135; }
+.a .tbtn { background: #ffffff04; border-color: #ffffff08; }
+.a .tbtn-icon { background: #3a3a5a; }
+
+
+/* ══════════════════════════════════════════
+   OPTION B — FROST
+══════════════════════════════════════════ */
+.b .label { background: #06b6d422; color: #67e8f9; border: 1px solid #06b6d444; }
+.b .shell { background: #0b1520; }
+.b .sidebar { background: rgba(10, 20, 35, 0.85); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.07); }
+.b .sidebar-logo { border-bottom-color: rgba(255,255,255,0.06); }
+.b .logo-icon { background: linear-gradient(135deg, #0ea5e9, #06b6d4); box-shadow: 0 0 16px #0ea5e940; color: #fff; }
+.b .logo-text { color: #e0f2fe; }
+.b .nav-item.active { background: rgba(14,165,233,0.12); color: #7dd3fc; }
+.b .nav-item.active .nav-dot { background: linear-gradient(135deg, #0ea5e9, #06b6d4); }
+.b .nav-item { color: #334155; }
+.b .nav-item .nav-dot { background: #1e3a4a; }
+.b .nav-divider { background: rgba(255,255,255,0.05); }
+.b .main { background: transparent; }
+.b .messages { }
+.b .msg-user { background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(6,182,212,0.1)); border: 1px solid rgba(14,165,233,0.25); color: #bae6fd; backdrop-filter: blur(10px); }
+.b .msg-ai { background: rgba(255,255,255,0.04); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); color: #cbd5e1; }
+.b .ai-badge { background: transparent; color: #64748b; border-color: rgba(255,255,255,0.1); }
+.b .input-zone { background: rgba(10,20,35,0.8); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.06); }
+.b .chip { background: transparent; color: #334155; border-color: rgba(255,255,255,0.08); }
+.b .chip.active { background: rgba(14,165,233,0.12); color: #38bdf8; border-color: rgba(14,165,233,0.3); }
+.b .input-field { background: rgba(255,255,255,0.04); backdrop-filter: blur(8px); border-color: rgba(255,255,255,0.08); color: #e2e8f0; }
+.b .input-field::placeholder { color: #1e3a4a; }
+.b .send-btn { background: linear-gradient(135deg, #0ea5e9, #06b6d4); box-shadow: 0 4px 14px #0ea5e935; }
+.b .tbtn { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.07); }
+.b .tbtn-icon { background: #1e3a4a; }
+
+
+/* ══════════════════════════════════════════
+   OPTION C — INK
+══════════════════════════════════════════ */
+.c .label { background: #ff3b3022; color: #ff6b61; border: 1px solid #ff3b3044; }
+.c .shell { background: #000; }
+.c .sidebar { background: #000; border-right: 1px solid #1a1a1a; }
+.c .sidebar-logo { border-bottom-color: #111; }
+.c .logo-icon { background: #fff; color: #000; border-radius: 8px; font-weight: 900; }
+.c .logo-text { color: #fff; letter-spacing: -.02em; }
+.c .nav-item.active { background: transparent; color: #fff; border-left: 2px solid #ff3b30; padding-left: 8px; }
+.c .nav-item.active .nav-dot { background: #ff3b30; border-radius: 2px; }
+.c .nav-item { color: #333; }
+.c .nav-item .nav-dot { background: #222; border-radius: 2px; }
+.c .nav-divider { background: #111; }
+.c .main { background: #000; }
+.c .msg-user { background: #fff; color: #000; border-radius: 12px 12px 2px 12px; font-weight: 500; }
+.c .msg-ai { background: #0a0a0a; border: 1px solid #1a1a1a; color: #ccc; border-radius: 2px 12px 12px 12px; }
+.c .ai-badge { background: transparent; color: #333; border-color: #1a1a1a; }
+.c .input-zone { background: #000; border-top: 1px solid #111; }
+.c .chip { background: transparent; color: #333; border-color: #1a1a1a; }
+.c .chip.active { background: #fff; color: #000; border-color: #fff; font-weight: 700; }
+.c .input-field { background: #0a0a0a; border-color: #1a1a1a; color: #fff; border-radius: 8px; }
+.c .input-field::placeholder { color: #222; }
+.c .send-btn { background: #ff3b30; box-shadow: 0 4px 14px #ff3b3040; border-radius: 8px; }
+.c .tbtn { background: transparent; border-color: #1a1a1a; border-radius: 6px; }
+.c .tbtn-icon { background: #222; border-radius: 2px; }
+
+
+/* ══════════════════════════════════════════
+   OPTION D — AURORA
+══════════════════════════════════════════ */
+.d .label { background: #ec489922; color: #f9a8d4; border: 1px solid #ec489944; }
+.d .shell { background: linear-gradient(160deg, #0d0620 0%, #080d20 50%, #06101a 100%); }
+.d .sidebar { background: linear-gradient(180deg, #130824 0%, #0c0d24 100%); border-right: 1px solid rgba(255,255,255,0.06); }
+.d .sidebar-logo { border-bottom-color: rgba(255,255,255,0.06); }
+.d .logo-icon { background: linear-gradient(135deg, #ec4899, #8b5cf6); box-shadow: 0 0 20px #ec489940; color: #fff; }
+.d .logo-text { color: #f0e8ff; }
+.d .nav-item.active { background: rgba(236,72,153,0.1); color: #f9a8d4; }
+.d .nav-item.active .nav-dot { background: linear-gradient(135deg, #ec4899, #8b5cf6); }
+.d .nav-item { color: #2a1a3a; }
+.d .nav-item .nav-dot { background: #1a0e2a; }
+.d .nav-divider { background: rgba(255,255,255,0.05); }
+.d .main { background: transparent; }
+.d .msg-user { background: linear-gradient(135deg, rgba(236,72,153,0.22), rgba(139,92,246,0.15)); border: 1px solid rgba(236,72,153,0.25); color: #fce7f3; }
+.d .msg-ai { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); color: #c4b5d4; }
+.d .ai-badge { background: transparent; color: #4a3060; border-color: rgba(255,255,255,0.1); }
+.d .input-zone { background: rgba(13,6,32,0.9); border-top: 1px solid rgba(255,255,255,0.06); }
+.d .chip { background: transparent; color: #2a1a3a; border-color: rgba(255,255,255,0.07); }
+.d .chip.active { background: rgba(236,72,153,0.12); color: #f472b6; border-color: rgba(236,72,153,0.3); }
+.d .input-field { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #e9d5ff; }
+.d .input-field::placeholder { color: #1a0e2a; }
+.d .send-btn { background: linear-gradient(135deg, #ec4899, #8b5cf6); box-shadow: 0 4px 18px #ec489940; }
+.d .tbtn { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.07); }
+.d .tbtn-icon { background: #1a0e2a; }
+</style>
+</head>
+<body>
+<h1>Meta AI — Propositions de design</h1>
+<div class="grid">
+
+  <!-- A: OBSIDIAN -->
+  <div class="card a">
+    <div class="label">A — Obsidian</div>
+    <div class="shell">
+      <div class="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-icon">M</div>
+          <div class="logo-text">Meta AI</div>
+        </div>
+        <div class="nav-item active"><div class="nav-dot"></div>Chatbot IA</div>
+        <div class="nav-item"><div class="nav-dot"></div>Images IA</div>
+        <div class="nav-item"><div class="nav-dot"></div>Vidéo IA</div>
+        <div class="nav-divider"></div>
+        <div class="nav-item"><div class="nav-dot"></div>Réglages</div>
+        <div class="nav-item"><div class="nav-dot"></div>Premium</div>
+      </div>
+      <div class="main">
+        <div class="messages">
+          <div class="msg-user">L'IA va-t-elle remplacer les développeurs ?</div>
+          <div class="msg-ai-wrap">
+            <div class="ai-badges">
+              <div class="ai-badge" style="color:#10b981;border-color:#10b98130">GPT-4o</div>
+              <div class="ai-badge" style="color:#f97316;border-color:#f9731630">Claude</div>
+              <div class="ai-badge" style="color:#3b82f6;border-color:#3b82f630">Gemini</div>
+            </div>
+            <div class="msg-ai">Non, l'IA va plutôt transformer le rôle des développeurs. Elle automatise les tâches répétitives mais la conception, l'architecture et la résolution de problèmes complexes restent humains...</div>
+          </div>
+        </div>
+        <div class="input-zone">
+          <div class="ai-chips">
+            <div class="chip active" style="background:#10b98115;color:#10b981;border-color:#10b98130">GPT-4o</div>
+            <div class="chip active" style="background:#f9731615;color:#f97316;border-color:#f9731630">Claude</div>
+            <div class="chip active" style="background:#3b82f615;color:#3b82f6;border-color:#3b82f630">Gemini</div>
+            <div class="chip">Mistral</div>
+            <div class="chip">Grok</div>
+          </div>
+          <div class="input-row">
+            <div class="toolbar-btns">
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+            </div>
+            <input class="input-field" placeholder="Posez votre question…" />
+            <div class="send-btn"><div class="send-icon"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B: FROST -->
+  <div class="card b">
+    <div class="label">B — Frost</div>
+    <div class="shell">
+      <div class="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-icon">M</div>
+          <div class="logo-text">Meta AI</div>
+        </div>
+        <div class="nav-item active"><div class="nav-dot"></div>Chatbot IA</div>
+        <div class="nav-item"><div class="nav-dot"></div>Images IA</div>
+        <div class="nav-item"><div class="nav-dot"></div>Vidéo IA</div>
+        <div class="nav-divider"></div>
+        <div class="nav-item"><div class="nav-dot"></div>Réglages</div>
+        <div class="nav-item"><div class="nav-dot"></div>Premium</div>
+      </div>
+      <div class="main">
+        <div class="messages">
+          <div class="msg-user">L'IA va-t-elle remplacer les développeurs ?</div>
+          <div class="msg-ai-wrap">
+            <div class="ai-badges">
+              <div class="ai-badge" style="color:#10b981;border-color:#10b98130">GPT-4o</div>
+              <div class="ai-badge" style="color:#f97316;border-color:#f9731630">Claude</div>
+              <div class="ai-badge" style="color:#3b82f6;border-color:#3b82f630">Gemini</div>
+            </div>
+            <div class="msg-ai">Non, l'IA va plutôt transformer le rôle des développeurs. Elle automatise les tâches répétitives mais la conception, l'architecture et la résolution de problèmes complexes restent humains...</div>
+          </div>
+        </div>
+        <div class="input-zone">
+          <div class="ai-chips">
+            <div class="chip active" style="background:#0ea5e915;color:#38bdf8;border-color:#0ea5e930">GPT-4o</div>
+            <div class="chip active" style="background:#0ea5e910;color:#7dd3fc;border-color:#0ea5e920">Claude</div>
+            <div class="chip active" style="background:#06b6d410;color:#67e8f9;border-color:#06b6d430">Gemini</div>
+            <div class="chip">Mistral</div>
+            <div class="chip">Grok</div>
+          </div>
+          <div class="input-row">
+            <div class="toolbar-btns">
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+            </div>
+            <input class="input-field" placeholder="Posez votre question…" />
+            <div class="send-btn"><div class="send-icon"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: INK -->
+  <div class="card c">
+    <div class="label">C — Ink</div>
+    <div class="shell">
+      <div class="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-icon">M</div>
+          <div class="logo-text">Meta AI</div>
+        </div>
+        <div class="nav-item active"><div class="nav-dot"></div>Chatbot IA</div>
+        <div class="nav-item"><div class="nav-dot"></div>Images IA</div>
+        <div class="nav-item"><div class="nav-dot"></div>Vidéo IA</div>
+        <div class="nav-divider"></div>
+        <div class="nav-item"><div class="nav-dot"></div>Réglages</div>
+        <div class="nav-item"><div class="nav-dot"></div>Premium</div>
+      </div>
+      <div class="main">
+        <div class="messages">
+          <div class="msg-user">L'IA va-t-elle remplacer les développeurs ?</div>
+          <div class="msg-ai-wrap">
+            <div class="ai-badges">
+              <div class="ai-badge">GPT-4o</div>
+              <div class="ai-badge">Claude</div>
+              <div class="ai-badge">Gemini</div>
+            </div>
+            <div class="msg-ai">Non, l'IA va plutôt transformer le rôle des développeurs. Elle automatise les tâches répétitives mais la conception, l'architecture et la résolution de problèmes complexes restent humains...</div>
+          </div>
+        </div>
+        <div class="input-zone">
+          <div class="ai-chips">
+            <div class="chip active">GPT-4o</div>
+            <div class="chip active">Claude</div>
+            <div class="chip active">Gemini</div>
+            <div class="chip">Mistral</div>
+            <div class="chip">Grok</div>
+          </div>
+          <div class="input-row">
+            <div class="toolbar-btns">
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+            </div>
+            <input class="input-field" placeholder="Posez votre question…" />
+            <div class="send-btn"><div class="send-icon"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D: AURORA -->
+  <div class="card d">
+    <div class="label">D — Aurora</div>
+    <div class="shell">
+      <div class="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-icon">M</div>
+          <div class="logo-text">Meta AI</div>
+        </div>
+        <div class="nav-item active"><div class="nav-dot"></div>Chatbot IA</div>
+        <div class="nav-item"><div class="nav-dot"></div>Images IA</div>
+        <div class="nav-item"><div class="nav-dot"></div>Vidéo IA</div>
+        <div class="nav-divider"></div>
+        <div class="nav-item"><div class="nav-dot"></div>Réglages</div>
+        <div class="nav-item"><div class="nav-dot"></div>Premium</div>
+      </div>
+      <div class="main">
+        <div class="messages">
+          <div class="msg-user">L'IA va-t-elle remplacer les développeurs ?</div>
+          <div class="msg-ai-wrap">
+            <div class="ai-badges">
+              <div class="ai-badge" style="color:#10b981;border-color:#10b98130">GPT-4o</div>
+              <div class="ai-badge" style="color:#f97316;border-color:#f9731630">Claude</div>
+              <div class="ai-badge" style="color:#3b82f6;border-color:#3b82f630">Gemini</div>
+            </div>
+            <div class="msg-ai">Non, l'IA va plutôt transformer le rôle des développeurs. Elle automatise les tâches répétitives mais la conception, l'architecture et la résolution de problèmes complexes restent humains...</div>
+          </div>
+        </div>
+        <div class="input-zone">
+          <div class="ai-chips">
+            <div class="chip active" style="background:#ec489912;color:#f472b6;border-color:#ec489930">GPT-4o</div>
+            <div class="chip active" style="background:#8b5cf612;color:#c4b5fd;border-color:#8b5cf630">Claude</div>
+            <div class="chip active" style="background:#6366f112;color:#a5b4fc;border-color:#6366f130">Gemini</div>
+            <div class="chip">Mistral</div>
+            <div class="chip">Grok</div>
+          </div>
+          <div class="input-row">
+            <div class="toolbar-btns">
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+              <div class="tbtn"><div class="tbtn-icon"></div></div>
+            </div>
+            <input class="input-field" placeholder="Posez votre question…" />
+            <div class="send-btn"><div class="send-icon"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -541,7 +541,7 @@ export async function* streamOrchestrate(
   const availableProviders = selectedProviders.filter((p) => platformKeys[p])
 
   if (availableProviders.length === 0) {
-    yield { type: 'complete', aiResponses: [], arbitratorAI: null, sourceAI: null, bestResponse: 'Aucune IA disponible pour le moment.', sources: [] }
+    yield { type: 'complete', aiResponses: [], arbitratorAI: null, sourceAI: null, bestResponse: 'Aucune IA disponible pour le moment.', sources: [], divergence: 'faible' as const, divergenceReason: '' }
     return
   }
 

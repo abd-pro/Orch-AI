@@ -67,7 +67,7 @@ export default function HomePage() {
         </div>
 
         {/* Features */}
-        <div className="grid sm:grid-cols-2 gap-6 max-w-4xl w-full">
+        <div className="grid sm:grid-cols-3 gap-6 max-w-4xl w-full">
           {[
             {
               icon: '⚡',
@@ -80,6 +80,11 @@ export default function HomePage() {
               desc: 'Consultez chaque réponse individuellement et comparez les IA côte à côte.',
             },
             {
+              icon: '🎯',
+              title: 'IA recommandées',
+              desc: 'Le système sélectionne automatiquement les meilleures IA selon votre type de question.',
+            },
+            {
               icon: '⚔️',
               title: 'Mode Débat',
               desc: 'Deux IA s\'affrontent sur un sujet contradictoire, une troisième IA arbitre et tranche.',
@@ -89,6 +94,11 @@ export default function HomePage() {
               title: 'Détection d\'erreurs',
               desc: 'Quand les IA divergent sur une réponse, Orch.AI vous alerte. Le consensus = fiabilité.',
               highlight: true,
+            },
+            {
+              icon: '🌐',
+              title: 'Sources web en temps réel',
+              desc: 'Chaque IA consulte jusqu\'à 5 sources web récentes pour enrichir ses réponses.',
             },
           ].map((f) => (
             <div key={f.title} className={`rounded-xl p-6 text-left border ${f.highlight ? 'bg-[#cf7d56]/8 border-[#cf7d56]/30' : 'bg-[#18181b] border-[#27272a]'}`}>

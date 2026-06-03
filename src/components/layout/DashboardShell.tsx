@@ -44,7 +44,7 @@ export default function DashboardShell({ user, conversations, isAdmin, children 
         />
       </div>
 
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto relative">
         {/* Bouton ouverture : icône hamburger sur mobile, PanelLeftOpen sur desktop */}
         {!sidebarOpen && (
           <button

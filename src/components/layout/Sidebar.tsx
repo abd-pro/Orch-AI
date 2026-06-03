@@ -175,14 +175,6 @@ export default function Sidebar({ user, conversations = [], isAdmin = false, onC
                 <Zap size={11} className="text-[#cf7d56]" />
                 <span className="text-[10px] font-semibold text-[#cf7d56]">{usage.label}</span>
               </div>
-              {usage.remaining !== Infinity && usage.limit !== Infinity && (
-                <div className="h-1 rounded-full bg-[var(--bg)] overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-[#cf7d56] transition-all"
-                    style={{ width: `${Math.min(100, (usage.remaining / usage.limit) * 100)}%` }}
-                  />
-                </div>
-              )}
               {usage.remaining < 20 && usage.remaining !== Infinity && (
                 <p className="text-[10px] text-[#cf7d56] mt-1">Upgrade pour continuer →</p>
               )}

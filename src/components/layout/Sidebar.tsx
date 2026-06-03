@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { LogOut, Plus, Sun, Moon, PanelLeftClose, Home, ChevronDown, Search, X, Zap } from 'lucide-react'
+import { creditsToTokens } from '@/lib/types'
 import { createClient } from '@/lib/supabase/client'
 import { useTheme } from '@/components/providers/ThemeProvider'
 import OrchLogo from '@/components/OrchLogo'
@@ -176,7 +177,7 @@ export default function Sidebar({ user, conversations = [], isAdmin = false, onC
                   <span className="text-[10px] font-semibold text-[#cf7d56]">{usage.label}</span>
                 </div>
                 <span className="text-[10px] text-[var(--mu2)]">
-                  {usage.remaining === Infinity ? '∞' : usage.remaining} crédits
+                  {usage.remaining === Infinity ? '∞' : creditsToTokens(usage.remaining)} tokens
                 </span>
               </div>
               {usage.remaining !== Infinity && usage.limit !== Infinity && (
@@ -187,7 +188,7 @@ export default function Sidebar({ user, conversations = [], isAdmin = false, onC
                   />
                 </div>
               )}
-              {usage.remaining < 10 && usage.remaining !== Infinity && (
+              {usage.remaining < 20 && usage.remaining !== Infinity && (
                 <p className="text-[10px] text-[#cf7d56] mt-1">Upgrade pour continuer →</p>
               )}
             </div>

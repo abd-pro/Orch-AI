@@ -10,10 +10,10 @@ const plans = [
     price: '0€',
     period: '',
     description: 'Pour découvrir la plateforme',
-    credits: '50 crédits / mois',
+    tokens: '150K tokens / mois',
     maxAIs: '2 IA simultanées',
     features: [
-      '50 crédits / mois',
+      '150 000 tokens / mois',
       '2 IA simultanées max',
       'Gemini, Mistral, DeepSeek, Llama',
       'Historique des conversations',
@@ -30,10 +30,10 @@ const plans = [
     price: '4,99€',
     period: '/ mois',
     description: 'Pour les utilisateurs réguliers',
-    credits: '150 crédits / mois',
+    tokens: '450K tokens / mois',
     maxAIs: '4 IA simultanées',
     features: [
-      '150 crédits / mois',
+      '450 000 tokens / mois',
       '4 IA simultanées max',
       '+ GPT-4o, Perplexity',
       'Toutes les catégories',
@@ -50,10 +50,10 @@ const plans = [
     price: '9,99€',
     period: '/ mois',
     description: 'Pour les power users',
-    credits: '500 crédits / mois',
+    tokens: '1,5M tokens / mois',
     maxAIs: '6 IA simultanées',
     features: [
-      '500 crédits / mois',
+      '1 500 000 tokens / mois',
       '6 IA simultanées max',
       '+ Claude, Grok',
       'Toutes les fonctionnalités',
@@ -70,10 +70,10 @@ const plans = [
     price: '19,99€',
     period: '/ mois',
     description: 'Sans aucune limite',
-    credits: 'Crédits illimités',
+    tokens: 'Tokens illimités',
     maxAIs: '8 IA simultanées',
     features: [
-      'Crédits illimités',
+      'Tokens illimités',
       '8 IA simultanées',
       'Toutes les IA disponibles',
       'Accès prioritaire aux nouveaux modèles',
@@ -92,7 +92,7 @@ export default function PricingPage() {
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold mb-4">Choisissez votre plan</h1>
         <p className="text-[var(--mu1)] text-lg">
-          1 crédit = 1 appel IA. Chaque message coûte autant de crédits que d'IA sélectionnées.
+          Les tokens sont consommés à chaque échange avec les IA. ~1 500 tokens par réponse en moyenne.
         </p>
       </div>
 
@@ -123,7 +123,7 @@ export default function PricingPage() {
 
             {/* Quota badge */}
             <div className="bg-[var(--sur2)] rounded-xl px-3 py-2 text-center">
-              <p className="text-sm font-semibold text-[var(--fg)]">{plan.credits}</p>
+              <p className="text-sm font-semibold text-[var(--fg)]">{plan.tokens}</p>
               <p className="text-xs text-[var(--mu2)]">{plan.maxAIs}</p>
             </div>
 

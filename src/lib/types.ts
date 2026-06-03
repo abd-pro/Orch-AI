@@ -199,30 +199,41 @@ export type PlanConfig = {
   price: string
 }
 
+// Conversion : 1 crédit = 1 500 tokens en moyenne
+export const TOKENS_PER_CREDIT = 1500
+
+export function creditsToTokens(credits: number): string {
+  if (credits === Infinity) return '∞'
+  const total = credits * TOKENS_PER_CREDIT
+  if (total >= 1_000_000) return `${(total / 1_000_000).toFixed(1).replace('.0', '')}M`
+  if (total >= 1_000) return `${Math.round(total / 1_000)}K`
+  return total.toLocaleString('fr-FR')
+}
+
 export const PLANS: Record<UserPlan, PlanConfig> = {
   visitor: {
-    credits: 3,
+    credits: 6,
     maxAIs: 2,
     allowedAIs: ['gemini', 'mistral', 'deepseek', 'groq'],
     label: 'Visiteur',
     price: '0€',
   },
   free: {
-    credits: 50,
+    credits: 100,
     maxAIs: 2,
     allowedAIs: ['gemini', 'mistral', 'deepseek', 'groq'],
     label: 'Gratuit',
     price: '0€',
   },
   starter: {
-    credits: 150,
+    credits: 300,
     maxAIs: 4,
     allowedAIs: ['gemini', 'mistral', 'deepseek', 'groq', 'openai', 'perplexity'],
     label: 'Starter',
     price: '4,99€',
   },
   pro: {
-    credits: 500,
+    credits: 1000,
     maxAIs: 6,
     allowedAIs: ['gemini', 'mistral', 'deepseek', 'groq', 'openai', 'perplexity', 'grok', 'anthropic'],
     label: 'Pro',

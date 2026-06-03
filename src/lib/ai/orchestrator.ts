@@ -51,7 +51,7 @@ async function searchWeb(question: string): Promise<{ context: string; sources: 
   if (!apiKey) return { context: '', sources: [] }
   try {
     const client = tavily({ apiKey })
-    const result = await client.search(question, { maxResults: 5, searchDepth: 'basic' })
+    const result = await client.search(question, { maxResults: 5, searchDepth: 'advanced' })
     if (!result.results?.length) return { context: '', sources: [] }
     const sources: WebSource[] = result.results.map((r: { title: string; url: string }) => ({ title: r.title, url: r.url }))
     const context = result.results

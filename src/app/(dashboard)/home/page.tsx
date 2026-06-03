@@ -1,7 +1,8 @@
+import React from 'react'
 import Link from 'next/link'
 import { AI_MODELS } from '@/lib/types'
 import OrchLogo from '@/components/OrchLogo'
-import { GitCompare, Swords, Sparkles } from 'lucide-react'
+import { GitCompare, Swords, Sparkles, ShieldAlert } from 'lucide-react'
 
 const FEATURES = [
   {
@@ -18,6 +19,12 @@ const FEATURES = [
     icon: Sparkles,
     title: 'Arbitrage',
     desc: 'L\'orchestrateur désigne automatiquement la meilleure réponse',
+  },
+  {
+    icon: ShieldAlert,
+    title: 'Détection d\'erreurs',
+    desc: 'Si les IA divergent, Orch.AI le signale — les réponses unanimes sont plus fiables',
+    highlight: true,
   },
 ]
 
@@ -53,11 +60,15 @@ export default function HomePage() {
         </div>
 
         {/* Feature cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
-          {FEATURES.map(({ icon: Icon, title, desc }) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+          {FEATURES.map(({ icon: Icon, title, desc, highlight }: { icon: React.ElementType, title: string, desc: string, highlight?: boolean }) => (
             <div
               key={title}
-              className="bg-[var(--surface)] border border-[var(--bdr)] rounded-xl p-4 text-left"
+              className={`rounded-xl p-4 text-left border ${
+                highlight
+                  ? 'bg-[#cf7d56]/8 border-[#cf7d56]/30'
+                  : 'bg-[var(--surface)] border-[var(--bdr)]'
+              }`}
             >
               <Icon size={15} className="text-[#cf7d56] mb-2.5" />
               <p className="text-sm font-medium text-[var(--fg)]">{title}</p>

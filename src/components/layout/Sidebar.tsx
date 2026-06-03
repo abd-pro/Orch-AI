@@ -171,14 +171,9 @@ export default function Sidebar({ user, conversations = [], isAdmin = false, onC
         <div className="px-3 pb-2">
           <Link href="/pricing" className="block">
             <div className={`rounded-xl px-3 py-2 border transition-colors hover:border-[#cf7d56]/50 ${li ? 'bg-[#bababf] border-[#aaaab0]' : 'bg-[var(--sur2)] border-[var(--bdr)]'}`}>
-              <div className="flex items-center justify-between mb-1.5">
-                <div className="flex items-center gap-1.5">
-                  <Zap size={11} className="text-[#cf7d56]" />
-                  <span className="text-[10px] font-semibold text-[#cf7d56]">{usage.label}</span>
-                </div>
-                <span className="text-[10px] text-[var(--mu2)]">
-                  {usage.remaining === Infinity ? '∞' : creditsToTokens(usage.remaining)} tokens
-                </span>
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <Zap size={11} className="text-[#cf7d56]" />
+                <span className="text-[10px] font-semibold text-[#cf7d56]">{usage.label}</span>
               </div>
               {usage.remaining !== Infinity && usage.limit !== Infinity && (
                 <div className="h-1 rounded-full bg-[var(--bg)] overflow-hidden">

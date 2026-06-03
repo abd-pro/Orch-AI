@@ -25,7 +25,7 @@ export default function HomePage() {
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-24 text-center">
         <div className="inline-flex items-center gap-2 bg-[#18181b] border border-[#27272a] rounded-full px-4 py-1.5 text-sm text-[#a1a1aa] mb-8">
           <span className="w-2 h-2 rounded-full bg-[#cf7d56] animate-pulse"></span>
-          5 questions gratuites par jour, sans compte
+          Comparez toutes les IA en un seul endroit
         </div>
 
         <h1 className="text-5xl sm:text-6xl font-bold tracking-tight max-w-3xl leading-tight mb-6">
@@ -67,22 +67,32 @@ export default function HomePage() {
         </div>
 
         {/* Features */}
-        <div className="grid sm:grid-cols-3 gap-6 max-w-4xl w-full">
+        <div className="grid sm:grid-cols-2 gap-6 max-w-4xl w-full">
           {[
             {
+              icon: '⚡',
               title: 'Réponse optimale',
               desc: 'Une IA arbitre indépendante analyse et sélectionne la meilleure réponse parmi toutes les IA.',
             },
             {
+              icon: '🔍',
               title: 'Comparaison transparente',
-              desc: 'Affichez toutes les réponses côte à côte dans un tableau pour comparer et choisir vous-même.',
+              desc: 'Consultez chaque réponse individuellement et comparez les IA côte à côte.',
             },
             {
-              title: 'IA recommandées',
-              desc: 'Le système sélectionne automatiquement les meilleures IA selon votre type de question.',
+              icon: '⚔️',
+              title: 'Mode Débat',
+              desc: 'Deux IA s\'affrontent sur un sujet contradictoire, une troisième IA arbitre et tranche.',
+            },
+            {
+              icon: '🛡️',
+              title: 'Détection d\'erreurs',
+              desc: 'Quand les IA divergent sur une réponse, Orch.AI vous alerte. Le consensus = fiabilité.',
+              highlight: true,
             },
           ].map((f) => (
-            <div key={f.title} className="bg-[#18181b] border border-[#27272a] rounded-xl p-6 text-left">
+            <div key={f.title} className={`rounded-xl p-6 text-left border ${f.highlight ? 'bg-[#cf7d56]/8 border-[#cf7d56]/30' : 'bg-[#18181b] border-[#27272a]'}`}>
+              <div className="text-xl mb-3">{f.icon}</div>
               <h3 className="font-semibold mb-2">{f.title}</h3>
               <p className="text-sm text-[#a1a1aa] leading-relaxed">{f.desc}</p>
             </div>

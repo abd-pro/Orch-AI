@@ -1178,27 +1178,6 @@ function ChatContent() {
           </button>
         </div>
 
-        {/* Compteur de questions */}
-        {usagePlan && usagePlan !== 'premium' && usagePlan !== 'dev' && usageRemaining !== null && usageLimit !== null && !limitReached && (
-          <div className="flex items-center gap-3 px-1">
-            <div className="flex-1 h-1 bg-[var(--sur2)] rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-500"
-                style={{
-                  width: `${Math.max(0, Math.min(100, (usageRemaining / usageLimit) * 100))}%`,
-                  backgroundColor: usageRemaining <= 2 ? '#f87171' : usageRemaining <= 5 ? '#fb923c' : '#cf7d56',
-                }}
-              />
-            </div>
-            <span className="text-xs text-[var(--mu3)] shrink-0 tabular-nums">
-              {usageRemaining}/{usageLimit}
-              {usagePlan === 'visitor' ? ' à vie' : '/mois'}
-            </span>
-            {usageRemaining <= 3 && (
-              <a href="/pricing" className="text-xs text-[#cf7d56] hover:underline shrink-0">Passer Premium</a>
-            )}
-          </div>
-        )}
       </div>
     </div>
   )

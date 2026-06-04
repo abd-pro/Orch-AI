@@ -63,6 +63,17 @@ async function searchWeb(question: string): Promise<{ context: string; sources: 
   }
 }
 
+// Recontextualise la requête de recherche web.
+// Un message de suivi court ("voiture" après "améliore l'autonomie de ma batterie")
+// est ambigu seul → Tavily ramènerait des sources hors-sujet qui détournent les IA.
+// On le préfixe avec le dernier message utilisateur pour garder la recherche dans le fil.
+function buildSearchQuery(question: string, history: HistoryMessage[]): string {
+  const trimmed = question.trim()
+  if (history.length === 0 || trimmed.length > 80) return trimmed
+  const lastUser = [...history].reverse().find((m) => m.role === 'user')?.content?.trim() ?? ''
+  return lastUser ? `${lastUser} ${trimmed}`.slice(0, 400) : trimmed
+}
+
 async function callOpenAI(
   apiKey: string,
   question: string,
@@ -439,16 +450,23 @@ Règles strictes :
   }
 }
 
-function buildSynthesisPrompt(question: string, validResponses: AIResponse[]): string {
+function buildSynthesisPrompt(question: string, validResponses: AIResponse[], history: HistoryMessage[] = []): string {
+  const conversationContext = history.length > 0
+    ? `Historique de la conversation (pour garder le fil) :
+${history.slice(-6).map((m) => `${m.role === 'user' ? 'Utilisateur' : 'Assistant'} : ${m.content.slice(0, 600)}`).join('\n')}
+
+`
+    : ''
   return `Tu es un expert en évaluation de réponses d'IA. Analyse les réponses suivantes et fournis la meilleure synthèse.
 
-Question : "${question}"
+${conversationContext}Question actuelle : "${question}"
 
 Réponses :
 ${validResponses.map((r, i) => `\n--- Réponse ${i + 1} (${AI_MODELS.find((m) => m.provider === r.provider)?.name ?? r.provider}) ---\n${r.content}`).join('\n')}
 
 Instructions :
 - Sélectionne ou synthétise la meilleure réponse
+- Tiens compte de l'historique pour rester cohérent avec le fil de la conversation
 - Sois complet, précis et bien structuré
 - Ne mentionne pas les IA sources
 - Réponds directement sans introduction
@@ -553,7 +571,8 @@ export async function* streamOrchestrate(
     ? `${question}\n\n--- Fichier joint ---\n${fileContent}\n--- Fin du fichier ---`
     : question
 
-  const { context: webContext, sources } = image ? { context: '', sources: [] } : await searchWeb(questionWithFile)
+  const searchQuery = buildSearchQuery(question, history)
+  const { context: webContext, sources } = image ? { context: '', sources: [] } : await searchWeb(searchQuery)
   const enrichedQuestion = webContext
     ? `${questionWithFile}\n${webContext}\nRéponds à la question en te basant sur ces informations récentes si pertinent.`
     : questionWithFile
@@ -586,7 +605,7 @@ export async function* streamOrchestrate(
     }
   } else {
     sourceAI = arbitratorProvider
-    const prompt = buildSynthesisPrompt(question, valid)
+    const prompt = buildSynthesisPrompt(question, valid, history)
     const arbitratorKey = platformKeys[arbitratorProvider]!
     const streamer =
       arbitratorProvider === 'anthropic' ? streamAnthropic(arbitratorKey, prompt) :

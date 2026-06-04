@@ -5,58 +5,16 @@ import { z } from 'zod'
 import { headers } from 'next/headers'
 import { PLANS, type UserPlan, type AIProvider } from '@/lib/types'
 
-const STOP_WORDS = new Set([
-  // Articles
-  'le','la','les','un','une','des','du','de','d','l',
-  // Pronoms
-  'je','tu','il','elle','nous','vous','ils','elles','on',
-  'me','moi','te','toi','se','soi','lui','eux',
-  'mon','ma','mes','ton','ta','tes','son','sa','ses','notre','votre','leur','leurs',
-  'ce','cet','cette','ces','ceci','cela','ça',
-  'que','qui','quoi','dont','où','lequel','laquelle','lesquels','lesquelles',
-  // Verbes courants et auxiliaires
-  'est','sont','était','étaient','sera','seront','soit','soient',
-  'a','ai','as','avons','avez','ont','avait','avaient','aura','auront',
-  'faire','fait','fais','faites','faisons','faisait',
-  'dire','dit','dis','dites','disons',
-  'avoir','être','été',
-  'peut','peux','pouvez','pouvons','peuvent','pourrait','pourraient',
-  'doit','dois','devez','devons','doivent',
-  'veux','veut','voulez','voulons','veulent',
-  'faut','fallait',
-  // Verbes de demande (à filtrer dans les titres)
-  'explique','expliques','expliquer','expliquons','expliquez',
-  'dis','dites','donne','donnes','donner','donnez',
-  'montre','montres','montrer','montrez',
-  'décris','décrire','décrivez',
-  'liste','lister','listez',
-  'aide','aides','aider',
-  'trouve','trouves','trouver',
-  'calcule','calculer',
-  'résume','résumer',
-  'traduis','traduire',
-  'compare','comparer',
-  // Prépositions et conjonctions
-  'au','aux','par','pour','sur','sous','dans','avec','sans','entre','vers','chez',
-  'et','ou','ni','mais','donc','car','or','si','que','quand','lorsque','puisque',
-  // Adverbes courants
-  'ne','pas','plus','très','bien','aussi','tout','rien','jamais','toujours','souvent',
-  'comment','pourquoi','quand','combien','quel','quelle','quels','quelles',
-  'oui','non','peut-être','vraiment','simplement','seulement','encore','déjà',
-  // Divers
-  'alors','ainsi','donc','voici','voilà','cest','nest','ny','na','nai',
-  's','n','t','j','qu','m','c','y',
-])
-
-function extractKeywords(text: string, maxWords = 5): string {
-  const words = text
-    .toLowerCase()
-    .replace(/[^a-zàâäéèêëîïôöùûüç\s]/gi, ' ')
-    .split(/\s+/)
-    .filter((w) => w.length > 2 && !STOP_WORDS.has(w))
-  const unique = [...new Set(words)].slice(0, maxWords)
-  if (unique.length === 0) return text.slice(0, 50).trim()
-  return unique.slice(0, 3).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(', ')
+// Repli quand l'IA de titrage échoue : tronque proprement la question en une
+// phrase lisible (jamais une liste de mots-clés type "Mot, Mot, Mot").
+function truncateQuestion(text: string, maxLen = 42): string {
+  const clean = text.trim().replace(/\s+/g, ' ')
+  if (!clean) return 'Nouvelle conversation'
+  if (clean.length <= maxLen) return clean.charAt(0).toUpperCase() + clean.slice(1)
+  const cut = clean.slice(0, maxLen)
+  const lastSpace = cut.lastIndexOf(' ')
+  const base = (lastSpace > 20 ? cut.slice(0, lastSpace) : cut).trim()
+  return base.charAt(0).toUpperCase() + base.slice(1) + '…'
 }
 
 const chatSchema = z.object({
@@ -73,7 +31,7 @@ const chatSchema = z.object({
 
 async function generateTitle(question: string): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY
-  if (!apiKey) return extractKeywords(question)
+  if (!apiKey) return truncateQuestion(question)
   try {
     const OpenAI = (await import('openai')).default
     const client = new OpenAI({ apiKey })
@@ -81,14 +39,14 @@ async function generateTitle(question: string): Promise<string> {
       model: 'gpt-4o-mini',
       max_tokens: 20,
       messages: [
-        { role: 'system', content: 'Génère un titre court (3-5 mots max) en français pour résumer cette question. Réponds uniquement avec le titre, sans ponctuation finale.' },
+        { role: 'system', content: 'Tu génères un titre court et naturel (2 à 5 mots) résumant le sujet d\'une question, comme un titre de conversation. En français, sans guillemets ni ponctuation finale, première lettre en majuscule. Exemples : "Autonomie de la batterie", "Tour Eiffel", "Meilleur joueur de foot".' },
         { role: 'user', content: question.slice(0, 500) },
       ],
     })
-    const title = res.choices[0]?.message?.content?.trim()
-    return title && title.length > 0 ? title : extractKeywords(question)
+    const title = res.choices[0]?.message?.content?.trim().replace(/^["'«»\s]+|["'«».\s]+$/g, '')
+    return title && title.length > 0 ? title : truncateQuestion(question)
   } catch {
-    return extractKeywords(question)
+    return truncateQuestion(question)
   }
 }
 
@@ -182,6 +140,9 @@ export async function POST(request: Request) {
 
   ;(async () => {
     try {
+      // Titre IA généré en parallèle du streaming (qui dure plusieurs secondes),
+      // pour qu'il soit prêt à l'insertion — sans fire-and-forget tué par Vercel.
+      const titlePromise = user && !conversationId ? generateTitle(question) : null
       let finalAiResponses: import('@/lib/types').AIResponse[] = []
       let finalArbitratorAI: AIProvider | null = null
       let finalSourceAI: AIProvider | null = null
@@ -217,17 +178,12 @@ export async function POST(request: Request) {
       if (user) {
         const serviceClient = await createServiceClient()
         if (!convId) {
+          const title = titlePromise ? await titlePromise : truncateQuestion(question)
           const { data: newConv } = await serviceClient
             .from('conversations')
-            .insert({ user_id: user.id, title: extractKeywords(question) })
+            .insert({ user_id: user.id, title })
             .select('id')
             .single()
-          // Mettre à jour avec un titre IA en arrière-plan
-          if (newConv?.id) {
-            generateTitle(question).then((aiTitle) => {
-              serviceClient.from('conversations').update({ title: aiTitle }).eq('id', newConv.id)
-            }).catch(() => {})
-          }
           convId = newConv?.id
         }
         if (convId) {

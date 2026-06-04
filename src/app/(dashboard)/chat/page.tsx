@@ -799,6 +799,27 @@ function ChatContent() {
                   <MarkdownMessage content={msg.content} isStreaming={msg.isStreaming} />
                   {!msg.isStreaming && (
                     <div className="mt-3 pt-3 border-t border-[var(--sur2)] flex items-center gap-2">
+                      {(() => {
+                        const src = (msg.sourceAI ?? msg.arbitratorAI) as AIProvider | undefined
+                        const model = src ? AI_MODELS.find((m) => m.provider === src) : undefined
+                        if (!model) return null
+                        const isSynthesis = msg.sourceAI
+                          ? msg.sourceAI === msg.arbitratorAI
+                          : !!msg.arbitratorAI
+                        return (
+                          <span
+                            className="flex items-center gap-1.5 text-[11px] text-[var(--mu3)]"
+                            title={isSynthesis ? `Réponse synthétisée à partir des autres IA par ${model.name}` : `Réponse de ${model.name}`}
+                          >
+                            <span>{isSynthesis ? '⚖️' : '✨'}</span>
+                            <span>{isSynthesis ? 'Synthèse' : 'Réponse'} ·</span>
+                            <span className="flex items-center gap-1 font-medium" style={{ color: model.color }}>
+                              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: model.color }} />
+                              {model.name}
+                            </span>
+                          </span>
+                        )
+                      })()}
                       <div className="ml-auto flex items-center gap-1">
                         <button
                           onClick={() => {

@@ -1092,7 +1092,9 @@ function ChatContent() {
           )
         })()}
 
-        <div className="flex items-end gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+          {/* Outils — rangée dédiée sur mobile, en ligne sur desktop */}
+          <div className="flex items-center gap-2">
           {/* Upload fichier */}
           <input
             ref={fileInputRef}
@@ -1168,7 +1170,10 @@ function ChatContent() {
           >
             <Swords size={15} />
           </button>
+          </div>
 
+          {/* Saisie + envoi — pleine largeur sur mobile */}
+          <div className="flex items-end gap-2 sm:flex-1">
           {/* Textarea */}
           <div className="flex-1">
             <textarea
@@ -1177,7 +1182,7 @@ function ChatContent() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={loading || limitReached}
-              placeholder={isDebateMode ? 'Posez un sujet à débattre entre les IA…' : 'Posez votre question… (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)'}
+              placeholder={isDebateMode ? 'Sujet à débattre entre les IA…' : 'Posez votre question…'}
               rows={1}
               className={`w-full bg-[var(--surface)] border rounded-xl px-4 py-3 text-sm resize-none focus:outline-none transition-colors placeholder:text-[var(--mu3)] text-[var(--fg)] disabled:opacity-50 max-h-40 ${
                 isDebateMode
@@ -1198,6 +1203,7 @@ function ChatContent() {
           >
             {isDebateMode ? <Swords size={16} /> : <Send size={16} />}
           </button>
+          </div>
         </div>
 
       </div>

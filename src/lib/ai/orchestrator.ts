@@ -450,55 +450,68 @@ Règles strictes :
   }
 }
 
-function buildSynthesisPrompt(question: string, validResponses: AIResponse[], history: HistoryMessage[] = []): string {
-  const conversationContext = history.length > 0
-    ? `Historique de la conversation (pour garder le fil) :
-${history.slice(-6).map((m) => `${m.role === 'user' ? 'Utilisateur' : 'Assistant'} : ${m.content.slice(0, 600)}`).join('\n')}
-
-`
-    : ''
-  return `Tu es un expert en évaluation de réponses d'IA. Analyse les réponses suivantes et fournis la meilleure synthèse.
-
-${conversationContext}Question actuelle : "${question}"
-
-Réponses :
-${validResponses.map((r, i) => `\n--- Réponse ${i + 1} (${AI_MODELS.find((m) => m.provider === r.provider)?.name ?? r.provider}) ---\n${r.content}`).join('\n')}
-
-Instructions :
-- Sélectionne ou synthétise la meilleure réponse
-- Tiens compte de l'historique pour rester cohérent avec le fil de la conversation
-- Sois complet, précis et bien structuré
-- Ne mentionne pas les IA sources
-- Réponds directement sans introduction
-
-Réponse :`.trim()
-}
-
-async function* streamAnthropic(apiKey: string, prompt: string): AsyncGenerator<string> {
-  const client = new Anthropic({ apiKey })
-  const stream = client.messages.stream({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 2000,
-    messages: [{ role: 'user', content: prompt }],
-  })
-  for await (const chunk of stream) {
-    if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-      yield chunk.delta.text
-    }
+// Appel LLM simple (non streamé), tous providers — utilisé pour le jugement de l'arbitre.
+async function simpleCompletion(provider: AIProvider, apiKey: string, prompt: string, maxTokens = 10): Promise<string> {
+  if (provider === 'anthropic') {
+    const client = new Anthropic({ apiKey })
+    const res = await client.messages.create({ model: 'claude-haiku-4-5-20251001', max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] })
+    return res.content.find((b) => b.type === 'text')?.text ?? ''
   }
+  if (provider === 'gemini') {
+    const client = new GoogleGenerativeAI(apiKey)
+    const model = client.getGenerativeModel({ model: 'gemini-2.0-flash' })
+    const res = await model.generateContent(prompt)
+    return res.response.text()
+  }
+  if (provider === 'mistral') {
+    const client = new Mistral({ apiKey })
+    const res = await client.chat.complete({ model: 'mistral-small-latest', messages: [{ role: 'user', content: prompt }] })
+    const c = res.choices?.[0]?.message?.content
+    return typeof c === 'string' ? c : ''
+  }
+  const baseURL =
+    provider === 'grok' ? 'https://api.x.ai/v1' :
+    provider === 'perplexity' ? 'https://api.perplexity.ai' :
+    provider === 'deepseek' ? 'https://api.deepseek.com' :
+    provider === 'groq' ? 'https://api.groq.com/openai/v1' :
+    undefined
+  const model =
+    provider === 'grok' ? 'grok-3' :
+    provider === 'perplexity' ? 'sonar' :
+    provider === 'deepseek' ? 'deepseek-chat' :
+    provider === 'groq' ? 'llama-3.3-70b-versatile' :
+    'gpt-4o-mini'
+  const client = new OpenAI(baseURL ? { apiKey, baseURL } : { apiKey })
+  const res = await client.chat.completions.create({ model, max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] })
+  return res.choices[0].message.content ?? ''
 }
 
-async function* streamOpenAI(apiKey: string, prompt: string): AsyncGenerator<string> {
-  const client = new OpenAI({ apiKey })
-  const stream = await client.chat.completions.create({
-    model: 'gpt-4o',
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 2000,
-    stream: true,
-  })
-  for await (const chunk of stream) {
-    const text = chunk.choices[0]?.delta?.content ?? ''
-    if (text) yield text
+// L'arbitre ÉLIT la meilleure réponse parmi celles des IA (aucune synthèse / réécriture).
+// Renvoie l'index de la meilleure réponse, ou -1 si le jugement échoue.
+async function pickBestIndex(
+  question: string,
+  validResponses: AIResponse[],
+  provider: AIProvider,
+  apiKey: string,
+  history: HistoryMessage[],
+): Promise<number> {
+  const conversationContext = history.length > 0
+    ? `Contexte récent de la conversation :\n${history.slice(-4).map((m) => `${m.role === 'user' ? 'Utilisateur' : 'Assistant'} : ${m.content.slice(0, 300)}`).join('\n')}\n\n`
+    : ''
+  const prompt = `Plusieurs IA ont répondu à la même question. Choisis la MEILLEURE réponse : la plus complète, exacte, claire et utile.
+
+${conversationContext}Question : "${question}"
+
+${validResponses.map((r, i) => `--- Réponse ${i + 1} (${AI_MODELS.find((m) => m.provider === r.provider)?.name ?? r.provider}) ---\n${r.content.slice(0, 1500)}`).join('\n\n')}
+
+Réponds UNIQUEMENT par le numéro (de 1 à ${validResponses.length}) de la meilleure réponse. Aucun autre mot.`
+  try {
+    const content = await simpleCompletion(provider, apiKey, prompt, 10)
+    const match = content.match(/\d+/)
+    const idx = match ? parseInt(match[0], 10) - 1 : -1
+    return idx >= 0 && idx < validResponses.length ? idx : -1
+  } catch {
+    return -1
   }
 }
 
@@ -597,21 +610,18 @@ export async function* streamOrchestrate(
     bestResponse = 'Aucune réponse disponible.'
     yield { type: 'token', text: bestResponse }
   } else if (valid.length === 1 || !arbitratorProvider) {
-    const best = valid.sort((a, b) => b.content.length - a.content.length)[0]
+    const best = [...valid].sort((a, b) => b.content.length - a.content.length)[0]
     sourceAI = best.provider
     for await (const chunk of streamText(best.content)) {
       bestResponse += chunk
       yield { type: 'token', text: chunk }
     }
   } else {
-    sourceAI = arbitratorProvider
-    const prompt = buildSynthesisPrompt(question, valid, history)
-    const arbitratorKey = platformKeys[arbitratorProvider]!
-    const streamer =
-      arbitratorProvider === 'anthropic' ? streamAnthropic(arbitratorKey, prompt) :
-      arbitratorProvider === 'openai'    ? streamOpenAI(arbitratorKey, prompt) :
-      streamText(valid[0].content)
-    for await (const chunk of streamer) {
+    // L'arbitre élit la meilleure réponse parmi celles des IA ; on l'affiche telle quelle.
+    const winnerIdx = await pickBestIndex(question, valid, arbitratorProvider, platformKeys[arbitratorProvider]!, history)
+    const winner = winnerIdx >= 0 ? valid[winnerIdx] : [...valid].sort((a, b) => b.content.length - a.content.length)[0]
+    sourceAI = winner.provider
+    for await (const chunk of streamText(winner.content)) {
       bestResponse += chunk
       yield { type: 'token', text: chunk }
     }

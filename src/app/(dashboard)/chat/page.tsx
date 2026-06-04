@@ -166,6 +166,8 @@ function ChatContent() {
           aiResponses: m.ai_responses,
           selectedAIs: m.selected_ais,
           arbitratorAI: m.arbitrator_ai,
+          // La réponse affichée EST celle d'une IA → on retrouve laquelle par son contenu
+          sourceAI: m.ai_responses?.find((r) => r.content === m.content)?.provider ?? null,
         }))
       )
     }
@@ -800,19 +802,18 @@ function ChatContent() {
                   {!msg.isStreaming && (
                     <div className="mt-3 pt-3 border-t border-[var(--sur2)] flex items-center gap-2">
                       {(() => {
-                        const src = (msg.sourceAI ?? msg.arbitratorAI) as AIProvider | undefined
+                        const validCount = msg.aiResponses?.filter((r) => !r.error && r.content).length ?? 0
+                        const src = msg.sourceAI as AIProvider | undefined
                         const model = src ? AI_MODELS.find((m) => m.provider === src) : undefined
                         if (!model) return null
-                        const isSynthesis = msg.sourceAI
-                          ? msg.sourceAI === msg.arbitratorAI
-                          : !!msg.arbitratorAI
+                        const isBest = validCount > 1
                         return (
                           <span
                             className="flex items-center gap-1.5 text-[11px] text-[var(--mu3)]"
-                            title={isSynthesis ? `Réponse synthétisée à partir des autres IA par ${model.name}` : `Réponse de ${model.name}`}
+                            title={isBest ? `Meilleure réponse, choisie par l'arbitre parmi ${validCount} réponses` : `Réponse de ${model.name}`}
                           >
-                            <span>{isSynthesis ? '⚖️' : '✨'}</span>
-                            <span>{isSynthesis ? 'Synthèse' : 'Réponse'} ·</span>
+                            <span>{isBest ? '🏆' : '✨'}</span>
+                            <span>{isBest ? 'Meilleure réponse' : 'Réponse'} ·</span>
                             <span className="flex items-center gap-1 font-medium" style={{ color: model.color }}>
                               <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: model.color }} />
                               {model.name}

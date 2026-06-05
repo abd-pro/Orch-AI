@@ -90,10 +90,7 @@ export default function PricingPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-16">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Choisissez votre plan</h1>
-        <p className="text-[var(--mu1)] text-lg">
-          Les tokens sont consommés à chaque échange avec les IA. ~1 500 tokens par réponse en moyenne.
-        </p>
+        <h1 className="text-4xl font-bold">Choisissez votre plan</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import PasswordField from '@/components/PasswordField'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -97,13 +98,11 @@ export default function RegisterPage() {
 
           <div>
             <label className="block text-sm font-medium mb-1.5">Mot de passe</label>
-            <input
-              type="password"
+            <PasswordField
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="8 caractères minimum"
-              className="w-full bg-[#09090b] border border-[#3f3f46] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#cf7d56] transition-colors placeholder:text-[#52525b]"
             />
           </div>
 

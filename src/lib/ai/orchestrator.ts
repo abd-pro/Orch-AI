@@ -159,7 +159,7 @@ async function callGemini(
   const start = Date.now()
   try {
     const client = new GoogleGenerativeAI(apiKey)
-    const model = client.getGenerativeModel({ model: 'gemini-2.0-flash', systemInstruction: systemPrompt })
+    const model = client.getGenerativeModel({ model: 'gemini-flash-latest', systemInstruction: systemPrompt })
 
     if (image) {
       // With image, use generateContent directly (includes history as text)
@@ -376,7 +376,7 @@ async function analyzeDivergence(
 
 Question : "${question}"
 
-${responses.map((r, i) => `--- IA ${i + 1} (${AI_MODELS.find((m) => m.provider === r.provider)?.name ?? r.provider}) ---\n${r.content.slice(0, 600)}`).join('\n\n')}
+${responses.map((r) => `--- ${AI_MODELS.find((m) => m.provider === r.provider)?.name ?? r.provider} ---\n${r.content.slice(0, 600)}`).join('\n\n')}
 
 Extrais la conclusion principale de chaque réponse (1 phrase), puis évalue si elles convergent.
 
@@ -384,12 +384,13 @@ Réponds UNIQUEMENT en JSON valide sans markdown :
 {"conclusions":["conclusion 1","conclusion 2"],"divergence":"faible","raison":"explication"}
 
 Règles strictes :
+- Dans "raison", désigne TOUJOURS les IA par leur nom (ex : GPT, Claude, Gemini), JAMAIS par un numéro ("IA 1", "IA 2").
 - "faible" : toutes arrivent à la même conclusion ou des conclusions compatibles
 - "modéré" : même direction générale mais nuances ou priorités différentes
 - "élevé" : conclusions contradictoires, incompatibles ou radicalement différentes`
 
   // Utiliser le provider le moins cher disponible
-  const order: AIProvider[] = ['groq', 'deepseek', 'mistral', 'gemini', 'openai', 'anthropic', 'grok', 'perplexity']
+  const order: AIProvider[] = ['openai', 'anthropic', 'deepseek', 'mistral', 'gemini', 'groq', 'grok', 'perplexity']
   const provider = order.find((p) => platformKeys[p])
   if (!provider) return { level: 'faible', reason: '' }
 
@@ -419,6 +420,7 @@ Règles strictes :
         model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 300,
+        response_format: { type: 'json_object' },
       })
       content = res.choices[0].message.content ?? ''
     } else if (provider === 'anthropic') {
@@ -459,7 +461,7 @@ async function simpleCompletion(provider: AIProvider, apiKey: string, prompt: st
   }
   if (provider === 'gemini') {
     const client = new GoogleGenerativeAI(apiKey)
-    const model = client.getGenerativeModel({ model: 'gemini-2.0-flash' })
+    const model = client.getGenerativeModel({ model: 'gemini-flash-latest' })
     const res = await model.generateContent(prompt)
     return res.response.text()
   }

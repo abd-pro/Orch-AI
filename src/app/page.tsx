@@ -35,7 +35,7 @@ export default function HomePage() {
         </h1>
 
         <p className="text-xl text-[#a1a1aa] max-w-2xl mb-10">
-          Interrogez GPT-4o, Claude, Gemini et Mistral simultanément. Une IA arbitre synthétise et sélectionne la meilleure réponse pour vous.
+          Interrogez GPT, Claude, Gemini et Mistral simultanément. Une IA arbitre synthétise et sélectionne la meilleure réponse pour vous.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-20">

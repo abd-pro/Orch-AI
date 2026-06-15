@@ -50,7 +50,7 @@ export interface UserAPIKey {
 export const AI_MODELS: AIModel[] = [
   {
     provider: 'openai',
-    name: 'GPT-4o',
+    name: 'GPT',
     model: 'gpt-4o',
     description: 'Modèle phare d\'OpenAI, excellent en tout',
     strengths: ['general', 'code', 'math', 'multilingual'],

@@ -19,7 +19,7 @@ const plans = [
       'Historique des conversations',
       'Sources web (Tavily)',
     ],
-    locked: ['GPT-4o', 'Claude', 'Grok', 'Perplexity'],
+    locked: ['GPT', 'Claude', 'Grok', 'Perplexity'],
     cta: 'Commencer gratuitement',
     href: '/register',
     highlight: false,
@@ -35,7 +35,7 @@ const plans = [
     features: [
       '450 000 tokens / mois',
       '4 IA simultanées max',
-      '+ GPT-4o, Perplexity',
+      '+ GPT, Perplexity',
       'Toutes les catégories',
       'Mode débat',
     ],

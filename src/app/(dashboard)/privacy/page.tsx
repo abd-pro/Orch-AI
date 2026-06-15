@@ -35,7 +35,7 @@ export default function PrivacyPage() {
           <p className="mb-3">Orch.AI transmet vos messages aux fournisseurs d'IA que vous sélectionnez. Chaque fournisseur possède sa propre politique de confidentialité :</p>
           <div className="space-y-2">
             {[
-              { name: 'OpenAI (GPT-4o)', loc: '🇺🇸 États-Unis', url: 'https://openai.com/policies/privacy-policy' },
+              { name: 'OpenAI (GPT)', loc: '🇺🇸 États-Unis', url: 'https://openai.com/policies/privacy-policy' },
               { name: 'Anthropic (Claude)', loc: '🇺🇸 États-Unis', url: 'https://www.anthropic.com/privacy' },
               { name: 'Google (Gemini)', loc: '🇺🇸 États-Unis', url: 'https://policies.google.com/privacy' },
               { name: 'Mistral AI', loc: '🇫🇷 France (UE)', url: 'https://mistral.ai/privacy/' },

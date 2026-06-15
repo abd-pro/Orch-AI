@@ -109,7 +109,13 @@ async function checkUsage(
 
 export async function POST(request: Request) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  // Le web s'authentifie via cookies (SSR) ; l'app mobile via un header Bearer.
+  // On gère les deux pour que l'identité (et donc le plan) soit correcte sur mobile.
+  const authHeader = request.headers.get('authorization')
+  const bearer = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
+  const { data: { user } } = bearer
+    ? await supabase.auth.getUser(bearer)
+    : await supabase.auth.getUser()
 
   const body = await request.json()
   const parsed = chatSchema.safeParse(body)

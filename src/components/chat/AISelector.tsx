@@ -159,7 +159,7 @@ export default function AISelector({ selectedAIs, onToggle, category, onCategory
       {/* Avertissement IA verrouillées */}
       {allowedAIs && allowedAIs.length < AI_MODELS.length && (
         <p className="text-[10px] text-[var(--mu3)]">
-          🔒 GPT-4o, Claude, Grok et Perplexity disponibles à partir du plan Starter. &nbsp;
+          🔒 GPT, Claude, Grok et Perplexity disponibles à partir du plan Starter. &nbsp;
           <Link href="/pricing" className="text-[#cf7d56] hover:underline">Voir les plans →</Link>
         </p>
       )}

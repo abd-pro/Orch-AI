@@ -134,60 +134,6 @@ export const RECOMMENDED_AIS: Record<Category, AIProvider[]> = {
   summarize: ['anthropic', 'gemini', 'openai'],
 }
 
-// ─── Image Generation ────────────────────────────────────────────────────────
-
-export type ImageProvider = 'dalle' | 'stability' | 'flux' | 'ideogram' | 'gptimage'
-
-export interface ImageModelInfo {
-  provider: ImageProvider
-  name: string
-  description: string
-  color: string
-}
-
-export interface GeneratedImage {
-  provider: ImageProvider
-  url?: string
-  historyUrl?: string  // URL permanente pour l'historique (quand url est base64)
-  error?: string
-  durationMs?: number
-}
-
-export const IMAGE_MODELS: ImageModelInfo[] = [
-  { provider: 'dalle',     name: 'Pollinations',          description: 'Flux via Pollinations — gratuit & rapide',   color: '#10a37f' },
-  { provider: 'stability', name: 'Stable Diffusion 3.5', description: 'Stability AI — art & illustrations',         color: '#7c3aed' },
-  { provider: 'flux',      name: 'Flux 1.1 Pro',         description: 'Black Forest Labs — ultra réaliste',         color: '#2563eb' },
-  { provider: 'ideogram',  name: 'Ideogram 2',           description: 'Meilleur pour le texte dans les images',     color: '#db2777' },
-  { provider: 'gptimage',  name: 'ChatGPT Image',         description: 'OpenAI gpt-image-1 — cohérence & texte',     color: '#10a37f' },
-]
-
-// ─── Video Generation ─────────────────────────────────────────────────────────
-
-export type VideoProvider = 'runway' | 'luma' | 'kling' | 'pika' | 'minimax'
-
-export interface VideoModelInfo {
-  provider: VideoProvider
-  name: string
-  description: string
-  color: string
-}
-
-export interface GeneratedVideo {
-  provider: VideoProvider
-  url?: string
-  thumbnailUrl?: string
-  error?: string
-  durationMs?: number
-}
-
-export const VIDEO_MODELS: VideoModelInfo[] = [
-  { provider: 'runway',  name: 'Runway Gen-3',        description: 'Cinématique, mouvements fluides, qualité pro', color: '#0ea5e9' },
-  { provider: 'luma',    name: 'Luma Dream Machine',  description: 'Réalisme physique exceptionnel',               color: '#8b5cf6' },
-  { provider: 'kling',   name: 'Kling 1.6',           description: 'Cohérence temporelle, sujets multiples',       color: '#f59e0b' },
-  { provider: 'pika',    name: 'Pika 2.0',            description: 'Effets créatifs & transitions',                color: '#ec4899' },
-  { provider: 'minimax', name: 'Hailuo / MiniMax',    description: 'Rapide, économique, bon niveau général',       color: '#10b981' },
-]
-
 // ─── Modèle D : plans & quotas ───────────────────────────────────────────────
 export type UserPlan = 'visitor' | 'free' | 'starter' | 'pro' | 'unlimited' | 'dev'
 

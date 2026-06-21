@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { headers } from 'next/headers'
 
 const feedbackSchema = z.object({
-  provider: z.enum(['openai', 'anthropic', 'gemini', 'mistral', 'perplexity']),
+  provider: z.enum(['openai', 'anthropic', 'gemini', 'mistral', 'perplexity', 'grok', 'deepseek', 'groq']),
   rating: z.union([z.literal(1), z.literal(-1)]),
   category: z.string().default('general'),
   isFinalResponse: z.boolean().default(false),
@@ -18,7 +18,10 @@ export async function POST(request: Request) {
   const { provider, rating, category, isFinalResponse } = parsed.data
 
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  // Auth : le mobile envoie un Bearer token ; le web utilise les cookies SSR
+  const authHeader = request.headers.get('authorization')
+  const bearer = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
+  const { data: { user } } = bearer ? await supabase.auth.getUser(bearer) : await supabase.auth.getUser()
 
   const headersList = await headers()
   const ip = headersList.get('x-forwarded-for')?.split(',')[0] ?? 'unknown'

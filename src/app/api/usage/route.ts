@@ -3,9 +3,12 @@ import { NextResponse } from 'next/server'
 import { PLANS, type UserPlan } from '@/lib/types'
 import { headers } from 'next/headers'
 
-export async function GET() {
+export async function GET(request: Request) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  // Auth : le mobile envoie un Bearer token ; le web utilise les cookies SSR
+  const authHeader = request.headers.get('authorization')
+  const bearer = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
+  const { data: { user } } = bearer ? await supabase.auth.getUser(bearer) : await supabase.auth.getUser()
   const service = await createServiceClient()
 
   // Admin / dev

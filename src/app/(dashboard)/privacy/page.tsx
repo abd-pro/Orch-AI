@@ -15,8 +15,8 @@ export default function PrivacyPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-[var(--fg)] mb-3">1. Responsable du traitement</h2>
-          <p>Orch AI SAS, société par actions simplifiée unipersonnelle en cours de création, ci-après « Orch.AI », « nous » ou « la Société ».</p>
-          <p className="mt-2">Contact : <a href="mailto:privacy@getorch.ai" className="text-[#cf7d56] hover:underline">privacy@getorch.ai</a></p>
+          <p>Orch.AI, micro-entreprise (entreprise individuelle) immatriculée en France, SIREN [à compléter], ci-après « Orch.AI » ou « nous ».</p>
+          <p className="mt-2">Contact : <a href="mailto:contact@getorch-ai.com" className="text-[#cf7d56] hover:underline">contact@getorch-ai.com</a></p>
         </section>
 
         <section>
@@ -99,7 +99,7 @@ export default function PrivacyPage() {
             <li>Droit d'opposition et de limitation</li>
             <li>Droit de retirer votre consentement à tout moment</li>
           </ul>
-          <p className="mt-3 text-[var(--mu1)]">Pour exercer vos droits : <a href="mailto:privacy@getorch.ai" className="text-[#cf7d56] hover:underline">privacy@getorch.ai</a></p>
+          <p className="mt-3 text-[var(--mu1)]">Pour exercer vos droits : <a href="mailto:contact@getorch-ai.com" className="text-[#cf7d56] hover:underline">contact@getorch-ai.com</a></p>
         </section>
 
         <section>
@@ -109,7 +109,7 @@ export default function PrivacyPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-[var(--fg)] mb-3">9. Contact & réclamations</h2>
-          <p className="text-[var(--mu1)]">Pour toute question : <a href="mailto:privacy@getorch.ai" className="text-[#cf7d56] hover:underline">privacy@getorch.ai</a></p>
+          <p className="text-[var(--mu1)]">Pour toute question : <a href="mailto:contact@getorch-ai.com" className="text-[#cf7d56] hover:underline">contact@getorch-ai.com</a></p>
           <p className="mt-2 text-[var(--mu1)]">Vous pouvez également introduire une réclamation auprès de la <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" className="text-[#cf7d56] hover:underline">CNIL</a> (Commission Nationale de l'Informatique et des Libertés).</p>
         </section>
 

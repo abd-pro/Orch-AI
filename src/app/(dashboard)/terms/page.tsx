@@ -15,7 +15,7 @@ export default function TermsPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-[var(--fg)] mb-3">1. Présentation du service</h2>
-          <p className="text-[var(--mu1)]">Orch.AI est une plateforme d'orchestration multi-modèles d'intelligence artificielle permettant aux utilisateurs d'interroger simultanément plusieurs modèles d'IA et de comparer leurs réponses. Le service est édité par Orch AI SAS.</p>
+          <p className="text-[var(--mu1)]">Orch.AI est une plateforme d'orchestration multi-modèles d'intelligence artificielle permettant aux utilisateurs d'interroger simultanément plusieurs modèles d'IA et de comparer leurs réponses. Le service est édité par Orch.AI, micro-entreprise (entreprise individuelle), SIREN [à compléter].</p>
         </section>
 
         <section>
@@ -84,7 +84,7 @@ export default function TermsPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-[var(--fg)] mb-3">8. Propriété intellectuelle</h2>
-          <p className="text-[var(--mu1)]">L'interface, le code et la marque Orch.AI sont la propriété exclusive d'Orch AI SAS. Les réponses générées par les IA appartiennent selon les cas au fournisseur et/ou à l'utilisateur, conformément aux CGU de chaque fournisseur.</p>
+          <p className="text-[var(--mu1)]">L'interface, le code et la marque Orch.AI sont la propriété exclusive d'Orch.AI. Les réponses générées par les IA appartiennent selon les cas au fournisseur et/ou à l'utilisateur, conformément aux CGU de chaque fournisseur.</p>
         </section>
 
         <section>
@@ -99,12 +99,12 @@ export default function TermsPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-[var(--fg)] mb-3">11. Droit applicable</h2>
-          <p className="text-[var(--mu1)]">Les présentes CGU sont soumises au droit français. En cas de litige, les tribunaux compétents sont ceux du ressort du siège social d'Orch AI SAS.</p>
+          <p className="text-[var(--mu1)]">Les présentes CGU sont soumises au droit français. En cas de litige, les tribunaux français sont compétents.</p>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-[var(--fg)] mb-3">12. Contact</h2>
-          <p className="text-[var(--mu1)]">Pour toute question : <a href="mailto:legal@getorch.ai" className="text-[#cf7d56] hover:underline">legal@getorch.ai</a></p>
+          <p className="text-[var(--mu1)]">Pour toute question : <a href="mailto:contact@getorch-ai.com" className="text-[#cf7d56] hover:underline">contact@getorch-ai.com</a></p>
         </section>
 
       </div>

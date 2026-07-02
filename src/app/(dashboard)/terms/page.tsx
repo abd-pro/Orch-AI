@@ -15,7 +15,7 @@ export default function TermsPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-[var(--fg)] mb-3">1. Présentation du service</h2>
-          <p className="text-[var(--mu1)]">Orch.AI est une plateforme d'orchestration multi-modèles d'intelligence artificielle permettant aux utilisateurs d'interroger simultanément plusieurs modèles d'IA et de comparer leurs réponses. Le service est édité par Orch.AI, micro-entreprise (entreprise individuelle), SIREN [à compléter].</p>
+          <p className="text-[var(--mu1)]">Orch.AI est une plateforme d'orchestration multi-modèles d'intelligence artificielle permettant aux utilisateurs d'interroger simultanément plusieurs modèles d'IA et de comparer leurs réponses. Le service est édité par Orch.AI, micro-entreprise (entreprise individuelle), SIREN 884 717 646.</p>
         </section>
 
         <section>

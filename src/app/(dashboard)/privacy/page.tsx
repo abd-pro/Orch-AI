@@ -15,7 +15,7 @@ export default function PrivacyPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-[var(--fg)] mb-3">1. Responsable du traitement</h2>
-          <p>Orch.AI, micro-entreprise (entreprise individuelle) immatriculée en France, SIREN [à compléter], ci-après « Orch.AI » ou « nous ».</p>
+          <p>Orch.AI, micro-entreprise (entreprise individuelle) immatriculée en France, SIREN 884 717 646, ci-après « Orch.AI » ou « nous ».</p>
           <p className="mt-2">Contact : <a href="mailto:contact@getorch-ai.com" className="text-[#cf7d56] hover:underline">contact@getorch-ai.com</a></p>
         </section>
 
